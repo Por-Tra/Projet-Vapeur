@@ -1,12 +1,8 @@
-# Projet-Vapeur
+# Projet Vapeur - Application web  
 
 
-Contributeurs : 
-
-Lucas CONTRERAS-HODAPP
-
-Clément BOUNAIX
-
-Nathanaël MORIT 
-
-Lucas CHAPON
+# Credits
+[Clément BOUNAIX](https://github.com/loazur)  
+[Lucas CONTRERAS-HODAPP](https://github.com/Por-Tra)   
+[Nathanaël MORIT](https://github.com/Mortann)  
+[Lucas CHAPON](https://github.com/LucasChap-git)  
