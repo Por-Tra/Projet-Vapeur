@@ -1,0 +1,28 @@
+{
+  "name": "projet-vapeur",
+  "version": "1.0.0",
+  "description": "[Clément BOUNAIX](https://github.com/loazur)   [Lucas CONTRERAS-HODAPP](https://github.com/Por-Tra)    [Nathanaël MORIT](https://github.com/Mortann)   [Lucas CHAPON](https://github.com/LucasChap-git)",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon ..."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Por-Tra/Projet-Vapeur.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Por-Tra/Projet-Vapeur/issues"
+  },
+  "homepage": "https://github.com/Por-Tra/Projet-Vapeur#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "hbs": "^4.2.0",
+    "nodemon": "^3.1.11",
+    "prisma": "6.19.0",
+    "sqlite3": "^5.1.7"
+  }
+}
