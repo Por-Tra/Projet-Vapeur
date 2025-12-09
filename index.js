@@ -15,18 +15,21 @@ app.get("/", (req, res) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/tasks", async (req, res) => {
-    const tasks = await prisma.task.findMany();
+    const tasks = await prisma.jeu.findMany();
     res.json(tasks);
 });
 
-app.post("/tasks", async (req, res) => {
+app.post("/tasks", async (req, res) => 
+    {
     const { title } = req.body;
     try {
         await prisma.task.create({
             data: { title },
         }); // Ici on ne stock pas le retour de la requête, mais on attend quand même son exécution
         res.status(201).redirect("/tasks"); // On redirige vers la page des tâches
-    } catch (error) {
+    }
+    catch (error) 
+    {
         console.error(error);
         res.status(400).json({ error: "Task creation failed" });
     }
