@@ -16,7 +16,7 @@ datasource db {
 
 model Jeu {
   idJeu Int @id @default(autoincrement())
-  title String 
+  titre String 
   description String
   dateDeSortie DateTime @default(now())
   misEnAvant Boolean @default(false)
