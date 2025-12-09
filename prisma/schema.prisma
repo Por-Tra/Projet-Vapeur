@@ -12,3 +12,55 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+
+model Jeu {
+  idJeu Int @id @default(autoincrement())
+  title String 
+  description String
+  dateDeSortie DateTime @default(now())
+  misEnAvant Boolean @default(false)
+  
+  // Relations many-to-many
+  genres JeuGenre[]
+  editeurs JeuEditeur[]
+}
+
+model Genre { 
+  idGenre Int @id @default(autoincrement())
+  nomGenre String @unique
+  
+  // Relations
+  jeux JeuGenre[]
+}
+
+model Editeur {
+  idEditeur Int @id @default(autoincrement())
+  nomEditeur String
+  
+  // Relations
+  jeux JeuEditeur[]
+}
+
+// Table de jointure pour la relation many-to-many entre Jeu et Genre
+model JeuGenre {
+  idJeu Int
+  idGenre Int
+  
+  jeu Jeu @relation(fields: [idJeu], references: [idJeu], onDelete: Cascade)
+  genre Genre @relation(fields: [idGenre], references: [idGenre], onDelete: Cascade)
+  
+  @@id([idJeu, idGenre])
+}
+
+// Table de jointure pour la relation many-to-many entre Jeu et Editeur
+model JeuEditeur {
+  idJeu Int
+  idEditeur Int
+  
+  jeu Jeu @relation(fields: [idJeu], references: [idJeu], onDelete: Cascade)
+  editeur Editeur @relation(fields: [idEditeur], references: [idEditeur], onDelete: Cascade)
+  
+  @@id([idJeu, idEditeur])
+}
+

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Por-Tra/Projet-Vapeur#readme",
   "dependencies": {
+    "@prisma/client": "^6.19.0",
     "express": "^5.2.1",
     "hbs": "^4.2.0",
     "nodemon": "^3.1.11",
