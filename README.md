@@ -1,7 +1,7 @@
 # Projet Vapeur - Application web  
 
 
-# Credits
+# Credits test
 [Clément BOUNAIX](https://github.com/loazur)  
 [Lucas CONTRERAS-HODAPP](https://github.com/Por-Tra)   
 [Nathanaël MORIT](https://github.com/Mortann)  
