@@ -4,7 +4,7 @@
   "description": "[Clément BOUNAIX](https://github.com/loazur)   [Lucas CONTRERAS-HODAPP](https://github.com/Por-Tra)    [Nathanaël MORIT](https://github.com/Mortann)   [Lucas CHAPON](https://github.com/LucasChap-git)",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon ..."
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Por-Tra/Projet-Vapeur#readme",
   "dependencies": {
+    "@prisma/client": "^6.19.0",
     "express": "^5.2.1",
     "hbs": "^4.2.0",
     "nodemon": "^3.1.11",
