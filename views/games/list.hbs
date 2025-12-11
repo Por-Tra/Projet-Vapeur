@@ -27,6 +27,9 @@
                         <li>{{editeur.nomEditeur}}</li>
                     {{/each}}
                 </ul>
+
+                {{!-- Ajouter le bouton supprimer --}}
+                <button onclick="location.href='/delete-game?id={{idJeu}}'">Supprimer le jeu</button>
             </div>
         {{/each}}
     {{else}}

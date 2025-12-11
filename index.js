@@ -101,6 +101,19 @@ app.get("/add-game", async (req, res) => {
     res.render("games/add", { genres, editeurs });
 });
 
+app.get("/delete-game", async (req, res) => {
+    const { id } = req.query;
+    try {
+        await prisma.jeu.delete({
+            where: { idJeu: parseInt(id) },
+        });
+        res.redirect("/games");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la suppression du jeu");
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
