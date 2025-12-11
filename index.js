@@ -25,17 +25,18 @@ app.get("/", async (req, res) => {
 
 // Ajouter un jeu
 app.post("/add-game", async (req, res) => {
-    const { title, description, dateDeSortie, genres, editeurs, misEnAvant } = req.body;
+    const { titre, description, dateDeSortie, genres, editeurs, misEnAvant } = req.body;
     
-    // Créer le jeu
-    const jeu = await prisma.jeu.create({
-        data: {
-            title,
-            description,
-            dateDeSortie: dateDeSortie ? new Date(dateDeSortie) : new Date(),
-            misEnAvant: misEnAvant === "on" || misEnAvant === "true",
-        },
-    });
+    try {
+        // Créer le jeu
+        const jeu = await prisma.jeu.create({
+            data: {
+                titre,
+                description,
+                dateDeSortie: dateDeSortie ? new Date(dateDeSortie) : new Date(),
+                misEnAvant: misEnAvant === "on" || misEnAvant === "true",
+            },
+        });
 
     // Associer les genres (si fournis)
     if (genres) {
@@ -67,7 +68,11 @@ app.post("/add-game", async (req, res) => {
         );
     }
 
-    res.redirect("/games");
+        res.redirect("/games");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la création du jeu");
+    }
 });
 
 // Afficher tous les jeux

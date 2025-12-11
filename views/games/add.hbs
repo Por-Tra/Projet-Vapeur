@@ -1,0 +1,47 @@
+<h1>Ajouter un jeu</h1>
+
+<form action="/add-game" method="POST">
+    <div>
+        <label for="titre">Titre :</label>
+        <input type="text" id="titre" name="titre" required />
+    </div>
+
+    <div>
+        <label for="description">Description :</label>
+        <textarea id="description" name="description" required></textarea>
+    </div>
+
+    <div>
+        <label for="dateDeSortie">Date de sortie :</label>
+        <input type="date" id="dateDeSortie" name="dateDeSortie" />
+    </div>
+
+    <div>
+        <label>Genres :</label>
+        {{#each genres}}
+            <div>
+                <input type="checkbox" id="genre-{{idGenre}}" name="genres" value="{{idGenre}}" />
+                <label for="genre-{{idGenre}}">{{nomGenre}}</label>
+            </div>
+        {{/each}}
+    </div>
+
+    <div>
+        <label>Éditeurs :</label>
+        {{#each editeurs}}
+            <div>
+                <input type="checkbox" id="editeur-{{idEditeur}}" name="editeurs" value="{{idEditeur}}" />
+                <label for="editeur-{{idEditeur}}">{{nomEditeur}}</label>
+            </div>
+        {{/each}}
+    </div>
+
+    <div>
+        <input type="checkbox" id="misEnAvant" name="misEnAvant" />
+        <label for="misEnAvant">Mettre en avant</label>
+    </div>
+
+    <button type="submit">Ajouter le jeu</button>
+</form>
+
+<a href="/games">Retour à la liste</a>
