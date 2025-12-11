@@ -1,0 +1,40 @@
+<h1>Liste des jeux</h1>
+
+<a href="/add-game">Ajouter un nouveau jeu</a>
+
+<div>
+    {{#if games}}
+        {{#each games}}
+            <div>
+                <h2>{{titre}}</h2>
+                <p><strong>Description :</strong> {{description}}</p>
+                <p><strong>Date de sortie :</strong> {{dateDeSortie}}</p>
+                
+                {{#if misEnAvant}}
+                    <p><strong>Mis en avant</strong></p>
+                {{/if}}
+
+                <p><strong>Genres :</strong></p>
+                <ul>
+                    {{#each genres}}
+                        <li>{{genre.nomGenre}}</li>
+                    {{/each}}
+                </ul>
+
+                <p><strong>Éditeurs :</strong></p>
+                <ul>
+                    {{#each editeurs}}
+                        <li>{{editeur.nomEditeur}}</li>
+                    {{/each}}
+                </ul>
+
+                {{!-- Ajouter le bouton supprimer --}}
+                <button onclick="location.href='/delete-game?id={{idJeu}}'">Supprimer le jeu</button>
+            </div>
+        {{/each}}
+    {{else}}
+        <p>Aucun jeu trouvé.</p>
+    {{/if}}
+</div>
+
+<a href="/">Retour à l'accueil</a>
