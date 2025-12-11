@@ -17,9 +17,12 @@ hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", async (req, res) => {
-    // on passe seulement le nom du fichier .hbs sans l'extention.
-    // Le chemin est relatif au dossier `views`.
-    // On peut aller chercher des templates dans les sous-dossiers (e.g. `movies/details`).
+    const jeuxMisEnAvant = await prisma.jeu.findMany
+    ({
+        where: { misEnAvant: true },
+        
+    },);
+    res.locals.jeuxMisEnAvant = jeuxMisEnAvant;
     res.render("index"); // Page d'accueil
 });
 
