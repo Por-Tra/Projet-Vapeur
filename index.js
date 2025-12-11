@@ -19,9 +19,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", async (req, res) => {
     const jeuxMisEnAvant = await prisma.jeu.findMany
     ({
-        where: { misEnAvant: true },
-        
-    },);
+        where: { misEnAvant: true }
+    });
     res.locals.jeuxMisEnAvant = jeuxMisEnAvant;
     res.render("index"); // Page d'accueil
 });
@@ -37,8 +36,8 @@ app.post("/add-game", async (req, res) => {
                 titre,
                 description,
                 dateDeSortie: dateDeSortie ? new Date(dateDeSortie) : new Date(),
-                misEnAvant: misEnAvant === "on" || misEnAvant === "true",
-            },
+                misEnAvant: misEnAvant === "on" || misEnAvant === "true"
+            }
         });
 
     // Associer les genres (si fournis)
@@ -47,12 +46,9 @@ app.post("/add-game", async (req, res) => {
         await Promise.all(
             genreIds.map((idGenre) =>
                 prisma.jeuGenre.create({
-                    data: {
-                        idJeu: jeu.idJeu,
-                        idGenre: parseInt(idGenre),
-                    },
-                })
-            )
+                    data: { idJeu: jeu.idJeu,
+                        idGenre: parseInt(idGenre)}
+            }))
         );
     }
 
@@ -64,15 +60,15 @@ app.post("/add-game", async (req, res) => {
                 prisma.jeuEditeur.create({
                     data: {
                         idJeu: jeu.idJeu,
-                        idEditeur: parseInt(idEditeur),
-                    },
+                        idEditeur: parseInt(idEditeur)}
                 })
             )
         );
     }
 
         res.redirect("/games");
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la création du jeu");
     }
@@ -81,18 +77,11 @@ app.post("/add-game", async (req, res) => {
 // Afficher tous les jeux
 app.get("/games", async (req, res) => {
     const games = await prisma.jeu.findMany({
-        include: {
-            genres: {
-                include: {
-                    genre: true,
-                },
-            },
-            editeurs: {
-                include: {
-                    editeur: true,
-                },
-            },
-        },
+        include: 
+        {
+            genres: {include: {genre: true}},
+            editeurs: {include: {editeur: true}}
+        }
     });
     res.render("games/list", { games });
 });
@@ -108,10 +97,11 @@ app.get("/delete-game", async (req, res) => {
     const { id } = req.query;
     try {
         await prisma.jeu.delete({
-            where: { idJeu: parseInt(id) },
+            where: { idJeu: parseInt(id) }
         });
         res.redirect("/games");
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la suppression du jeu");
     }
@@ -129,25 +119,23 @@ app.post("/add-editor", async (req, res) => {
     
     try {
         await prisma.editeur.create({
-            data: { nomEditeur },
+            data: { nomEditeur }
         });
         res.redirect("/editor");
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la création de l'éditeur");
     }
 });
 
-// Afficher tous les éditeurs
+// Afficher tous les éditeurs et les jeux auquels ils sotn associé
 app.get("/editor", async (req, res) => {
     const editeurs = await prisma.editeur.findMany({
-        include: {
-            jeux: {
-                include: {
-                    jeu: true,
-                },
-            },
-        },
+        include: 
+        {
+            jeux: {include: {jeu: true}}
+        }
     });
     res.render("editor/listEditor", { editeurs });
 });
@@ -157,10 +145,12 @@ app.get("/delete-editor", async (req, res) => {
     const { id } = req.query;
     try {
         await prisma.editeur.delete({
-            where: { idEditeur: parseInt(id) },
+            where: { idEditeur: parseInt(id) }
         });
         res.redirect("/editor");
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.error(error);
         res.status(500).send("Erreur lors de la suppression de l'éditeur");
     }
