@@ -1,4 +1,12 @@
 <h1>Ajouter un nouvel éditeur</h1>
 
-<a href="/editor">Voir la liste des éditeurs</a>
+<form action="/add-editor" method="POST">
+    <div>
+        <label for="nomEditeur">Nom de l'éditeur :</label>
+        <input type="text" id="nomEditeur" name="nomEditeur" required />
+    </div>
 
+    <button type="submit">Ajouter l'éditeur</button>
+</form>
+
+<a href="/editor">Retour à la liste des éditeurs</a>

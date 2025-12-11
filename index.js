@@ -118,6 +118,55 @@ app.get("/delete-game", async (req, res) => {
 });
 
 
+// Formulaire pour ajouter un éditeur
+app.get("/add-editor", (req, res) => {
+    res.render("editor/addEditor");
+});
+
+// Ajouter un éditeur
+app.post("/add-editor", async (req, res) => {
+    const { nomEditeur } = req.body;
+    
+    try {
+        await prisma.editeur.create({
+            data: { nomEditeur },
+        });
+        res.redirect("/editor");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la création de l'éditeur");
+    }
+});
+
+// Afficher tous les éditeurs
+app.get("/editor", async (req, res) => {
+    const editeurs = await prisma.editeur.findMany({
+        include: {
+            jeux: {
+                include: {
+                    jeu: true,
+                },
+            },
+        },
+    });
+    res.render("editor/listEditor", { editeurs });
+});
+
+// Supprimer un éditeur
+app.get("/delete-editor", async (req, res) => {
+    const { id } = req.query;
+    try {
+        await prisma.editeur.delete({
+            where: { idEditeur: parseInt(id) },
+        });
+        res.redirect("/editor");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la suppression de l'éditeur");
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

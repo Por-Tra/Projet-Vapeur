@@ -1,4 +1,30 @@
-<h1>Voir la liste des éditeurs</h1>
-
+<h1>Liste des éditeurs</h1>
 
 <a href="/add-editor">Ajouter un nouvel éditeur</a>
+
+<div>
+    {{#if editeurs}}
+        {{#each editeurs}}
+            <div>
+                <h2>{{nomEditeur}}</h2>
+                
+                <p><strong>Jeux publiés :</strong></p>
+                {{#if jeux}}
+                    <ul>
+                        {{#each jeux}}
+                            <li>{{jeu.titre}}</li>
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    <p>Aucun jeu publié</p>
+                {{/if}}
+                
+                <a href="/delete-editor?id={{idEditeur}}">Supprimer</a>
+            </div>
+        {{/each}}
+    {{else}}
+        <p>Aucun éditeur trouvé.</p>
+    {{/if}}
+</div>
+
+<a href="/">Retour à l'accueil</a>
