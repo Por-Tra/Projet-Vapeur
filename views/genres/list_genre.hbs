@@ -1,0 +1,17 @@
+<!-- Liste des genres -->
+<h1>Genres</h1>
+<div>
+    <h2>Liste des genres :</h2>
+    {{#if listegenre}}
+    <ul>
+    {{#each listegenre}}
+        <li>{{nomGenre}}</li>
+        <button onclick="location.href='/genres/{{idGenre}}/jeux'">Afficher les jeux</button>
+    {{/each}}
+    </ul>
+    {{else}}
+    <p>Aucun genre pour le moment.</p>
+    {{/if}}
+</div>
+
+<a href="/">Retour à l'accueil</a>
