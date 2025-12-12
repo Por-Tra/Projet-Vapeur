@@ -4,7 +4,7 @@
     {{#if jeuxMisEnAvant}}
     <ul>
     {{#each jeuxMisEnAvant}}
-        <li>{{titre}}</li>
+        <li><a href="/games/{{idJeu}}">{{titre}}</a></li>
     {{/each}}
     </ul>
     {{else}}
@@ -14,3 +14,4 @@
 
 <a href="/games">Voir la liste des jeux</a>
 <a href="/editors">Voir la liste des éditeurs</a>
+<a href="/genres">Voir la liste des genres</a>

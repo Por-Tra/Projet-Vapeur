@@ -6,7 +6,7 @@
     {{#if games}}
         {{#each games}}
             <div>
-                <h2>{{titre}}</h2>
+                <h2><a href="/games/{{idJeu}}">{{titre}}</a></h2>
                 <p><strong>Description :</strong> {{description}}</p>
                 <p><strong>Date de sortie :</strong> {{dateDeSortie}}</p>
                 
@@ -17,14 +17,14 @@
                 <p><strong>Genres :</strong></p>
                 <ul>
                     {{#each genres}}
-                        <li>{{genre.nomGenre}}</li>
+                        <li><a href="/genres/{{genre.idGenre}}/games">{{genre.nomGenre}}</a></li>
                     {{/each}}
                 </ul>
 
                 <p><strong>Éditeurs :</strong></p>
                 <ul>
                     {{#each editeurs}}
-                        <li>{{editeur.nomEditeur}}</li>
+                        <li><a href="/editors/{{editeur.idEditeur}}/games">{{editeur.nomEditeur}}</a></li>
                     {{/each}}
                 </ul>
 
