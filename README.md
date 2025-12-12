@@ -2,7 +2,7 @@
 ### Instructions d'installation et de lancement
 ```git clone``` - Cloner le projet  
 ```npm install``` - Installer les paquets  
-```npx prisma genertate deploy``` - Générer la base de donnée  
+```npx prisma generate deploy``` - Générer la base de données    
 ```npm run start``` - Lancer le projet  
 
 # Credits Projet-Vapeur
