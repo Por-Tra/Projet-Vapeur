@@ -235,6 +235,43 @@ app.get("/editors", async (req, res) => {
     res.render("editors/listEditor", { editeurs });
 });
 
+// Afficher les jeux publiés par un éditeur donné
+app.get("/editors/:id/games", async (req, res) => {
+    const editorId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(editorId)) {
+        return res.status(400).send("Identifiant d'éditeur invalide");
+    }
+
+    try {
+        const editeur = await prisma.editeur.findUnique({
+            where: { idEditeur: editorId },
+            include: {
+                jeux: {
+                    include: {
+                        jeu: {
+                            include: {
+                                genres: { include: { genre: true } }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!editeur) {
+            return res.status(404).send("Éditeur introuvable");
+        }
+
+        const jeux = editeur.jeux.map((jeuEditeur) => jeuEditeur.jeu);
+        res.render("editors/editorGames", { editeur, jeux });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors du chargement des jeux de l'éditeur");
+    }
+});
+
 // Supprimer un éditeur
 app.get("/delete-editor", async (req, res) => {
     const { id } = req.query;
