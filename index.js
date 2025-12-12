@@ -17,9 +17,11 @@ hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", async (req, res) => {
-    // on passe seulement le nom du fichier .hbs sans l'extention.
-    // Le chemin est relatif au dossier `views`.
-    // On peut aller chercher des templates dans les sous-dossiers (e.g. `movies/details`).
+    const jeuxMisEnAvant = await prisma.jeu.findMany
+    ({
+        where: { misEnAvant: true }
+    });
+    res.locals.jeuxMisEnAvant = jeuxMisEnAvant;
     res.render("index"); // Page d'accueil
 });
 
@@ -34,8 +36,8 @@ app.post("/add-game", async (req, res) => {
                 titre,
                 description,
                 dateDeSortie: dateDeSortie ? new Date(dateDeSortie) : new Date(),
-                misEnAvant: misEnAvant === "on" || misEnAvant === "true",
-            },
+                misEnAvant: misEnAvant === "on" || misEnAvant === "true"
+            }
         });
 
     // Associer les genres (si fournis)
@@ -44,12 +46,9 @@ app.post("/add-game", async (req, res) => {
         await Promise.all(
             genreIds.map((idGenre) =>
                 prisma.jeuGenre.create({
-                    data: {
-                        idJeu: jeu.idJeu,
-                        idGenre: parseInt(idGenre),
-                    },
-                })
-            )
+                    data: { idJeu: jeu.idJeu,
+                        idGenre: parseInt(idGenre)}
+            }))
         );
     }
 
@@ -61,15 +60,15 @@ app.post("/add-game", async (req, res) => {
                 prisma.jeuEditeur.create({
                     data: {
                         idJeu: jeu.idJeu,
-                        idEditeur: parseInt(idEditeur),
-                    },
+                        idEditeur: parseInt(idEditeur)}
                 })
             )
         );
     }
 
         res.redirect("/games");
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la création du jeu");
     }
@@ -78,18 +77,11 @@ app.post("/add-game", async (req, res) => {
 // Afficher tous les jeux
 app.get("/games", async (req, res) => {
     const games = await prisma.jeu.findMany({
-        include: {
-            genres: {
-                include: {
-                    genre: true,
-                },
-            },
-            editeurs: {
-                include: {
-                    editeur: true,
-                },
-            },
-        },
+        include: 
+        {
+            genres: {include: {genre: true}},
+            editeurs: {include: {editeur: true}}
+        }
     });
     res.render("games/list", { games });
 });
@@ -105,12 +97,62 @@ app.get("/delete-game", async (req, res) => {
     const { id } = req.query;
     try {
         await prisma.jeu.delete({
-            where: { idJeu: parseInt(id) },
+            where: { idJeu: parseInt(id) }
         });
         res.redirect("/games");
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la suppression du jeu");
+    }
+});
+
+
+// Formulaire pour ajouter un éditeur
+app.get("/add-editor", (req, res) => {
+    res.render("editor/addEditor");
+});
+
+// Ajouter un éditeur
+app.post("/add-editor", async (req, res) => {
+    const { nomEditeur } = req.body;
+    
+    try {
+        await prisma.editeur.create({
+            data: { nomEditeur }
+        });
+        res.redirect("/editor");
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la création de l'éditeur");
+    }
+});
+
+// Afficher tous les éditeurs et les jeux auquels ils sotn associé
+app.get("/editor", async (req, res) => {
+    const editeurs = await prisma.editeur.findMany({
+        include: 
+        {
+            jeux: {include: {jeu: true}}
+        }
+    });
+    res.render("editor/listEditor", { editeurs });
+});
+
+// Supprimer un éditeur
+app.get("/delete-editor", async (req, res) => {
+    const { id } = req.query;
+    try {
+        await prisma.editeur.delete({
+            where: { idEditeur: parseInt(id) }
+        });
+        res.redirect("/editor");
+    } 
+    catch (error) 
+    {
+        console.error(error);
+        res.status(500).send("Erreur lors de la suppression de l'éditeur");
     }
 });
 
