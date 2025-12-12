@@ -1,9 +1,9 @@
-<h1>Jeux publiés par {{editeur.nomEditeur}}</h1>
+<h1>Jeux publiés par <a href="/editors/{{editeur.idEditeur}}/games">{{editeur.nomEditeur}}</a></h1>
 
 {{#if jeux.length}}
     {{#each jeux}}
         <div>
-            <h2>{{titre}}</h2>
+            <h2><a href="/games/{{idJeu}}">{{titre}}</a></h2>
             <p><strong>Description :</strong> {{description}}</p>
             <p><strong>Date de sortie :</strong> {{dateDeSortie}}</p>
 
@@ -11,7 +11,7 @@
                 <p><strong>Genres :</strong></p>
                 <ul>
                     {{#each genres}}
-                        <li>{{genre.nomGenre}}</li>
+                        <li><a href="/genres/{{genre.idGenre}}/games">{{genre.nomGenre}}</a></li>
                     {{/each}}
                 </ul>
             {{/if}}

@@ -1,0 +1,35 @@
+<h1>Jeux du genre {{genre.nomGenre}}</h1>
+
+{{#if jeux.length}}
+    {{#each jeux}}
+        <div>
+            <h2><a href="/games/{{idJeu}}">{{titre}}</a></h2>
+            <p><strong>Description :</strong> {{description}}</p>
+            <p><strong>Date de sortie :</strong> {{dateDeSortie}}</p>
+
+            {{#if editeurs.length}}
+                <p><strong>Éditeurs :</strong></p>
+                <ul>
+                    {{#each editeurs}}
+                        <li><a href="/editors/{{editeur.idEditeur}}/games">{{editeur.nomEditeur}}</a></li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+
+            {{#if genres.length}}
+                <p><strong>Genres associés :</strong></p>
+                <ul>
+                    {{#each genres}}
+                        <li><a href="/genres/{{genre.idGenre}}/games">{{genre.nomGenre}}</a></li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+        </div>
+    {{/each}}
+{{else}}
+    <p>Aucun jeu n'est encore associé à ce genre.</p>
+{{/if}}
+
+<div>
+    <a href="/games">Retour à la liste des jeux</a>
+</div>
