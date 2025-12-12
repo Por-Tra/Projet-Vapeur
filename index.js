@@ -13,6 +13,14 @@ const hbs = require("hbs");
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
 hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit le dossier des partials (composants e.g. header, footer, menu...)
+hbs.registerHelper("includes", (collection, value) => {
+    if (!Array.isArray(collection)) {
+        return false;
+    }
+
+    const target = Number(value);
+    return collection.some((item) => Number(item) === target);
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -118,6 +126,10 @@ app.get("/edit-game", async (req, res) => {
                 editeurs: { include: { editeur: true } }
             }
         });
+
+        if (!jeu) {
+            return res.status(404).send("Jeu non trouvé");
+        }
         
         const genres = await prisma.genre.findMany();
         const editeurs = await prisma.editeur.findMany();
@@ -125,13 +137,17 @@ app.get("/edit-game", async (req, res) => {
         // Créer des tableaux d'IDs pour pré-cocher les cases
         const selectedGenres = jeu.genres.map(jg => jg.idGenre);
         const selectedEditeurs = jeu.editeurs.map(je => je.idEditeur);
+        const formattedDateDeSortie = jeu.dateDeSortie
+            ? new Date(jeu.dateDeSortie).toISOString().split("T")[0]
+            : "";
         
         res.render("games/edit", { 
             jeu, 
             genres, 
             editeurs, 
             selectedGenres, 
-            selectedEditeurs 
+            selectedEditeurs,
+            formattedDateDeSortie
         });
     } catch (error) {
         console.error(error);
