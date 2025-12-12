@@ -288,6 +288,45 @@ app.get("/delete-editor", async (req, res) => {
     }
 });
 
+// Formulaire pour modifier un éditeur
+app.get("/edit-editor", async (req, res) => {
+    const { id } = req.query;
+    try {
+        const editeur = await prisma.editeur.findUnique({
+            where: { idEditeur: parseInt(id) },
+            include: {
+                jeux: { include: { jeu: true } }
+            }
+        });
+        
+        if (!editeur) {
+            return res.status(404).send("Éditeur non trouvé");
+        }
+        
+        res.render("editors/editEditor", { editeur });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors du chargement de l'éditeur");
+    }
+});
+
+// Modifier un éditeur
+app.post("/edit-editor", async (req, res) => {
+    const { id, nomEditeur } = req.body;
+    
+    try {
+        await prisma.editeur.update({
+            where: { idEditeur: parseInt(id) },
+            data: { nomEditeur }
+        });
+        
+        res.redirect("/editors");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la modification de l'éditeur");
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
