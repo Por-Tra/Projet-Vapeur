@@ -415,6 +415,64 @@ app.post("/edit-editor", async (req, res) => {
 });
 
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+
+// Afficher tous les genres
+app.get("/genres", async (req, res) => {
+    const listegenre = await prisma.genre.findMany();
+    res.render("genres/list_genre", { listegenre });
 });
+
+// Afficher tous les jeux d'un genre spécifique
+app.get("/genres/:id/jeux", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const genreAvecJeux = await prisma.genre.findUnique({
+            where: { idGenre: parseInt(id) },
+            include: {
+                jeux: {
+                    include: { jeu: true }
+                }
+            }
+        });
+        // Préparer les données pour le template `list-genre-jeu.hbs`
+        const nomGenre = genreAvecJeux ? genreAvecJeux.nomGenre : "";
+        const listejeu = genreAvecJeux && genreAvecJeux.jeux ? genreAvecJeux.jeux.map(gj => gj.jeu) : [];
+        res.render("genres/list-genre-jeu", { nomGenre, listejeu });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des jeux pour ce genre");
+    }
+});
+
+
+// Seed des genres par défaut si nécessaire
+async function seedGenres() {
+    const defaultGenres = [
+        "Action",
+        "Aventure",
+        "RPG",
+        "Stratégie",
+        "Simulation"
+    ];
+
+    for (const nomGenre of defaultGenres) {
+        await prisma.genre.upsert({
+            where: { nomGenre },
+            update: {},
+            create: { nomGenre }
+        });
+    }
+}
+
+(async () => {
+    try {
+        await seedGenres();
+        app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+    } catch (err) {
+        console.error("Erreur lors de l'initialisation :", err);
+        process.exit(1);
+    }
+})();

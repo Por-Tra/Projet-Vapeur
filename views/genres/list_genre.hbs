@@ -5,8 +5,7 @@
     {{#if listegenre}}
     <ul>
     {{#each listegenre}}
-        <li>{{nomGenre}}</li>
-        <button onclick="location.href='/genres/{{idGenre}}/jeux'">Afficher les jeux</button>
+        <li><a href="/genres/{{idGenre}}/jeux">{{nomGenre}}</a></li>
     {{/each}}
     </ul>
     {{else}}
