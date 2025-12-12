@@ -30,6 +30,9 @@
 
                 {{!-- Ajouter le bouton supprimer --}}
                 <button onclick="location.href='/delete-game?id={{idJeu}}'">Supprimer le jeu</button>
+
+                {{!-- Ajouter le bouton modifier --}}
+                <button onclick="location.href='/edit-game?id={{idJeu}}'">Modifier le jeu</button>
             </div>
         {{/each}}
     {{else}}

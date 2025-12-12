@@ -1,0 +1,24 @@
+<h1>Jeux publiés par {{editeur.nomEditeur}}</h1>
+
+{{#if jeux.length}}
+    {{#each jeux}}
+        <div>
+            <h2>{{titre}}</h2>
+            <p><strong>Description :</strong> {{description}}</p>
+            <p><strong>Date de sortie :</strong> {{dateDeSortie}}</p>
+
+            {{#if genres}}
+                <p><strong>Genres :</strong></p>
+                <ul>
+                    {{#each genres}}
+                        <li>{{genre.nomGenre}}</li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+        </div>
+    {{/each}}
+{{else}}
+    <p>Cet éditeur n'a encore publié aucun jeu.</p>
+{{/if}}
+
+<a href="/editors">Retour à la liste des éditeurs</a>
