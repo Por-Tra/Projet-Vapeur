@@ -86,6 +86,39 @@ app.get("/games", async (req, res) => {
     res.render("games/list", { games });
 });
 
+// Afficher le détail d'un jeu
+app.get("/games/:id", async (req, res) => {
+    const gameId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(gameId)) {
+        return res.status(400).send("Identifiant de jeu invalide");
+    }
+
+    try {
+        const jeu = await prisma.jeu.findUnique({
+            where: { idJeu: gameId },
+            include: {
+                genres: { include: { genre: true } },
+                editeurs: { include: { editeur: true } }
+            }
+        });
+
+        if (!jeu) {
+            return res.status(404).send("Jeu introuvable");
+        }
+
+        const formattedDate = jeu.dateDeSortie
+            ? new Date(jeu.dateDeSortie).toLocaleDateString("fr-FR")
+            : "";
+
+        res.render("games/show", { jeu, formattedDate });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors du chargement du jeu");
+    }
+});
+
 // Formulaire pour ajouter un jeu
 app.get("/add-game", async (req, res) => {
     const genres = await prisma.genre.findMany();
@@ -233,6 +266,44 @@ app.get("/editors", async (req, res) => {
         }
     });
     res.render("editors/listEditor", { editeurs });
+});
+
+// Afficher les jeux associés à un genre
+app.get("/genres/:id/games", async (req, res) => {
+    const genreId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(genreId)) {
+        return res.status(400).send("Identifiant de genre invalide");
+    }
+
+    try {
+        const genre = await prisma.genre.findUnique({
+            where: { idGenre: genreId },
+            include: {
+                jeux: {
+                    include: {
+                        jeu: {
+                            include: {
+                                genres: { include: { genre: true } },
+                                editeurs: { include: { editeur: true } }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!genre) {
+            return res.status(404).send("Genre introuvable");
+        }
+
+        const jeux = genre.jeux.map((jeuGenre) => jeuGenre.jeu);
+        res.render("genres/genreGames", { genre, jeux });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors du chargement des jeux du genre");
+    }
 });
 
 // Afficher les jeux publiés par un éditeur donné
