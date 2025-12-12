@@ -1,13 +1,17 @@
-<h1>Ajouter un nouvel éditeur</h1>
+<div class="page-title">
+    <h1>Ajouter un éditeur</h1>
+</div>
 
-<form action="/add-editor" method="POST">
-    <div>
-        <label for="nomEditeur">Nom de l'éditeur :</label>
-        <input type="text" id="nomEditeur" name="nomEditeur" required />
-    </div>
-    {{!--  --}}
-    {{!-- Envoie des donéne à la db --}}
-    <button type="submit">Ajouter l'éditeur</button>
-</form>
-
-<a href="/editors">Retour à la liste des éditeurs</a>
+<div class="form-container">
+    <form action="/add-editor" method="POST">
+        <div class="form-group">
+            <label for="nomEditeur" class="form-label">Nom de l'éditeur</label>
+            <input type="text" id="nomEditeur" name="nomEditeur" class="form-input" placeholder="Ex: Ubisoft, Electronic Arts..." required />
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Ajouter l'éditeur</button>
+            <a href="/editors" class="btn btn-ghost">Annuler</a>
+        </div>
+    </form>
+</div>

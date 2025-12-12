@@ -1,36 +1,46 @@
-<h1>Liste des éditeurs</h1>
+<div class="page-title">
+    <h1>Éditeurs</h1>
+    <a href="/add-editor" class="btn btn-primary">+ Ajouter un éditeur</a>
+</div>
 
-<a href="/add-editor">Ajouter un nouvel éditeur</a>
-
-<div>
-    {{#if editeurs}} {{!-- Verif s'il y a des éditeurs exisatnts --}}
-        {{#each editeurs}} {{!-- Afficher si c'est le cas --}}
-            <div>
-                <h2><a href="/editors/{{idEditeur}}/games">{{nomEditeur}}</a></h2>
-                
-                <p><strong>Jeux publiés :</strong></p>
-
-
-                {{#if jeux}}
-                    <ul>
-                        {{#each jeux}}
-                            <li><a href="/games/{{jeu.idJeu}}">{{jeu.titre}}</a></li>
-                        {{/each}}
-                    </ul>
-
-                
-                {{else}}
-                    <p>Aucun jeu publié</p>
-                {{/if}}
-                
-                <a href="/editors/{{idEditeur}}/games">Voir les jeux de l'éditeur</a>
-                <a href="/delete-editor?id={{idEditeur}}">Supprimer</a>
-                <a href="/edit-editor?id={{idEditeur}}">Modifier</a>
+<div class="cards-grid">
+    {{#if editeurs}}
+        {{#each editeurs}}
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <a href="/editors/{{idEditeur}}/games">{{nomEditeur}}</a>
+                    </h3>
+                    
+                    <p class="text-muted mb-1"><strong>Jeux publiés :</strong></p>
+                    
+                    {{#if jeux}}
+                        <div class="card-meta">
+                            {{#each jeux}}
+                                <a href="/games/{{jeu.idJeu}}" class="tag">{{jeu.titre}}</a>
+                            {{/each}}
+                        </div>
+                    {{else}}
+                        <p class="text-muted">Aucun jeu publié</p>
+                    {{/if}}
+                </div>
+                <div class="card-footer">
+                    <a href="/editors/{{idEditeur}}/games" class="btn btn-secondary">Voir les jeux</a>
+                    <a href="/edit-editor?id={{idEditeur}}" class="btn btn-ghost">Modifier</a>
+                    <a href="/delete-editor?id={{idEditeur}}" class="btn btn-danger" onclick="return confirm('Supprimer cet éditeur ?')">×</a>
+                </div>
             </div>
         {{/each}}
     {{else}}
-        <p>Aucun éditeur trouvé.</p>
+        <div class="card">
+            <div class="card-body text-center">
+                <p class="text-muted">Aucun éditeur trouvé.</p>
+                <a href="/add-editor" class="btn btn-primary mt-2">Ajouter votre premier éditeur</a>
+            </div>
+        </div>
     {{/if}}
 </div>
 
-<a href="/">Retour à l'accueil</a>
+<div class="mt-3">
+    <a href="/" class="btn btn-ghost">← Retour à l'accueil</a>
+</div>

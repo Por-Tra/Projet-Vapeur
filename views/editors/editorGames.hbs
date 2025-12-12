@@ -1,24 +1,43 @@
-<h1>Jeux publiés par <a href="/editors/{{editeur.idEditeur}}/games">{{editeur.nomEditeur}}</a></h1>
+<div class="page-title">
+    <h1>Jeux de <span class="text-accent">{{editeur.nomEditeur}}</span></h1>
+</div>
 
 {{#if jeux.length}}
+<div class="cards-grid">
     {{#each jeux}}
-        <div>
-            <h2><a href="/games/{{idJeu}}">{{titre}}</a></h2>
-            <p><strong>Description :</strong> {{description}}</p>
-            <p><strong>Date de sortie :</strong> {{dateDeSortie}}</p>
-
-            {{#if genres}}
-                <p><strong>Genres :</strong></p>
-                <ul>
+        <div class="card">
+            <div class="card-image"></div>
+            <div class="card-body">
+                <h3 class="card-title">
+                    <a href="/games/{{idJeu}}">{{titre}}</a>
+                </h3>
+                {{#if description}}
+                <p class="card-desc">{{description}}</p>
+                {{/if}}
+                <p class="text-muted"><strong>Sortie :</strong> {{dateDeSortie}}</p>
+                
+                {{#if genres}}
+                <div class="card-meta">
                     {{#each genres}}
-                        <li><a href="/genres/{{genre.idGenre}}/games">{{genre.nomGenre}}</a></li>
+                        <a href="/genres/{{genre.idGenre}}/games" class="tag">{{genre.nomGenre}}</a>
                     {{/each}}
-                </ul>
-            {{/if}}
+                </div>
+                {{/if}}
+            </div>
+            <div class="card-footer">
+                <a href="/games/{{idJeu}}" class="btn btn-primary">Voir le jeu</a>
+            </div>
         </div>
     {{/each}}
+</div>
 {{else}}
-    <p>Cet éditeur n'a encore publié aucun jeu.</p>
+<div class="card">
+    <div class="card-body text-center">
+        <p class="text-muted">Cet éditeur n'a encore publié aucun jeu.</p>
+    </div>
+</div>
 {{/if}}
 
-<a href="/editors">Retour à la liste des éditeurs</a>
+<div class="mt-3">
+    <a href="/editors" class="btn btn-ghost">← Retour aux éditeurs</a>
+</div>
