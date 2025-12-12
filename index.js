@@ -205,7 +205,7 @@ app.post("/edit-game", async (req, res) => {
 
 // Formulaire pour ajouter un éditeur
 app.get("/add-editor", (req, res) => {
-    res.render("editor/addEditor");
+    res.render("editors/addEditor");
 });
 
 // Ajouter un éditeur
