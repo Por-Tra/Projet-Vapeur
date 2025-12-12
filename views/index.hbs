@@ -1,9 +1,16 @@
 <h1>Page d'accueil</h1>
 <div>
     <h2>Jeux mis en avant:</h2>
-    {{#each jeu}}
-        <li>
-            {{titre}}
-        </li>
+    {{#if jeuxMisEnAvant}}
+    <ul>
+    {{#each jeuxMisEnAvant}}
+        <li>{{titre}}</li>
     {{/each}}
+    </ul>
+    {{else}}
+    <p>Aucun jeu mis en avant pour le moment.</p>
+    {{/if}}
 </div>
+
+<a href="/games">Voir la liste des jeux</a>
+<a href="/editors">Voir la liste des éditeurs</a>
