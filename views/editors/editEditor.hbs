@@ -1,14 +1,19 @@
-<h1>Modifier l'éditeur</h1>
+<div class="page-title">
+    <h1>Modifier l'éditeur</h1>
+</div>
 
-<form action="/edit-editor" method="POST">
-    <input type="hidden" name="id" value="{{editeur.idEditeur}}" />
-    
-    <div>
-        <label for="nomEditeur">Nom de l'éditeur :</label>
-        <input type="text" id="nomEditeur" name="nomEditeur" value="{{editeur.nomEditeur}}" required />
-    </div>
-    
-    <button type="submit">Modifier l'éditeur</button>
-</form>
-
-<a href="/editors">Retour à la liste des éditeurs</a>
+<div class="form-container">
+    <form action="/edit-editor" method="POST">
+        <input type="hidden" name="id" value="{{editeur.idEditeur}}" />
+        
+        <div class="form-group">
+            <label for="nomEditeur" class="form-label">Nom de l'éditeur</label>
+            <input type="text" id="nomEditeur" name="nomEditeur" class="form-input" value="{{editeur.nomEditeur}}" required />
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="/editors" class="btn btn-ghost">Annuler</a>
+        </div>
+    </form>
+</div>

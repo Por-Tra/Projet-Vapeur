@@ -1,16 +1,23 @@
-<!-- Liste des genres -->
-<h1>Genres</h1>
-<div>
-    <h2>Liste des genres :</h2>
-    {{#if listegenre}}
-    <ul>
-    {{#each listegenre}}
-        <li><a href="/genres/{{idGenre}}/jeux">{{nomGenre}}</a></li>
-    {{/each}}
-    </ul>
-    {{else}}
-    <p>Aucun genre pour le moment.</p>
-    {{/if}}
+<div class="page-title">
+    <h1>Genres</h1>
 </div>
 
-<a href="/">Retour à l'accueil</a>
+{{#if listegenre}}
+<ul class="list-simple">
+    {{#each listegenre}}
+        <li>
+            <a href="/genres/{{idGenre}}/jeux">{{nomGenre}}</a>
+        </li>
+    {{/each}}
+</ul>
+{{else}}
+<div class="card">
+    <div class="card-body text-center">
+        <p class="text-muted">Aucun genre pour le moment.</p>
+    </div>
+</div>
+{{/if}}
+
+<div class="mt-3">
+    <a href="/" class="btn btn-ghost">← Retour à l'accueil</a>
+</div>

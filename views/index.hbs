@@ -1,17 +1,52 @@
-<h1>Page d'accueil</h1>
-<div>
-    <h2>Jeux mis en avant:</h2>
+<!-- Section mise en avant -->
+<section class="featured-section">
+    <h2 class="featured-title">Jeux mis en avant</h2>
+    
     {{#if jeuxMisEnAvant}}
-    <ul>
-    {{#each jeuxMisEnAvant}}
-        <li><a href="/games/{{idJeu}}">{{titre}}</a></li>
-    {{/each}}
-    </ul>
+    <div class="cards-grid">
+        {{#each jeuxMisEnAvant}}
+        <div class="card">
+            <div class="card-image">
+                <span class="badge-featured"><i class="fas fa-star"></i> En vedette</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">
+                    <a href="/games/{{idJeu}}">{{titre}}</a>
+                </h3>
+                {{#if description}}
+                <p class="card-desc">{{description}}</p>
+                {{/if}}
+            </div>
+            <div class="card-footer">
+                <a href="/games/{{idJeu}}" class="btn btn-primary">Voir le jeu</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
     {{else}}
-    <p>Aucun jeu mis en avant pour le moment.</p>
+    <div class="card">
+        <div class="card-body text-center">
+            <p class="text-muted">Aucun jeu mis en avant pour le moment.</p>
+        </div>
+    </div>
     {{/if}}
-</div>
+</section>
 
-<a href="/games">Voir la liste des jeux</a>
-<a href="/editors">Voir la liste des éditeurs</a>
-<a href="/genres">Voir la liste des genres</a>
+<!-- Liens rapides -->
+<section class="featured-section">
+    <h2 class="featured-title">Explorer</h2>
+    <div class="quick-links">
+        <a href="/games" class="quick-link">
+            <span class="quick-link-icon"><i class="fas fa-gamepad"></i></span>
+            <span>Tous les jeux</span>
+        </a>
+        <a href="/editors" class="quick-link">
+            <span class="quick-link-icon"><i class="fas fa-building"></i></span>
+            <span>Éditeurs</span>
+        </a>
+        <a href="/genres" class="quick-link">
+            <span class="quick-link-icon"><i class="fas fa-tags"></i></span>
+            <span>Genres</span>
+        </a>
+    </div>
+</section>

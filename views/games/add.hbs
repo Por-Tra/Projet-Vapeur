@@ -1,47 +1,58 @@
-<h1>Ajouter un jeu</h1>
+<div class="page-title">
+    <h1>Ajouter un jeu</h1>
+</div>
 
-<form action="/add-game" method="POST">
-    <div>
-        <label for="titre">Titre :</label>
-        <input type="text" id="titre" name="titre" required />
-    </div>
+<div class="form-container">
+    <form action="/add-game" method="POST">
+        <div class="form-group">
+            <label for="titre" class="form-label">Titre</label>
+            <input type="text" id="titre" name="titre" class="form-input" placeholder="Nom du jeu..." required />
+        </div>
 
-    <div>
-        <label for="description">Description :</label>
-        <textarea id="description" name="description" required></textarea>
-    </div>
+        <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" name="description" class="form-textarea" placeholder="Décrivez le jeu..." required></textarea>
+        </div>
 
-    <div>
-        <label for="dateDeSortie">Date de sortie :</label>
-        <input type="date" id="dateDeSortie" name="dateDeSortie" />
-    </div>
+        <div class="form-group">
+            <label for="dateDeSortie" class="form-label">Date de sortie</label>
+            <input type="date" id="dateDeSortie" name="dateDeSortie" class="form-input" />
+        </div>
 
-    <div>
-        <label>Genres :</label>
-        {{#each genres}}
-            <div>
-                <input type="checkbox" id="genre-{{idGenre}}" name="genres" value="{{idGenre}}" />
-                <label for="genre-{{idGenre}}">{{nomGenre}}</label>
+        <div class="form-group">
+            <label class="form-label">Genres</label>
+            <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem;">
+                {{#each genres}}
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="genre-{{idGenre}}" name="genres" value="{{idGenre}}" />
+                        <span>{{nomGenre}}</span>
+                    </label>
+                {{/each}}
             </div>
-        {{/each}}
-    </div>
+        </div>
 
-    <div>
-        <label>Éditeurs :</label>
-        {{#each editeurs}}
-            <div>
-                <input type="checkbox" id="editeur-{{idEditeur}}" name="editeurs" value="{{idEditeur}}" />
-                <label for="editeur-{{idEditeur}}">{{nomEditeur}}</label>
+        <div class="form-group">
+            <label class="form-label">Éditeurs</label>
+            <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem;">
+                {{#each editeurs}}
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="editeur-{{idEditeur}}" name="editeurs" value="{{idEditeur}}" />
+                        <span>{{nomEditeur}}</span>
+                    </label>
+                {{/each}}
             </div>
-        {{/each}}
-    </div>
+        </div>
 
-    <div>
-        <input type="checkbox" id="misEnAvant" name="misEnAvant" />
-        <label for="misEnAvant">Mettre en avant</label>
-    </div>
+        <div class="form-group">
+            <label class="form-checkbox">
+                <input type="checkbox" id="misEnAvant" name="misEnAvant" />
+                <span>Mettre en avant sur la page d'accueil</span>
+            </label>
+        </div>
 
-    <button type="submit">Ajouter le jeu</button>
-</form>
-
-<a href="/games">Retour à la liste</a>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Ajouter le jeu</button>
+            <a href="/games" class="btn btn-ghost">Annuler</a>
+        </div>
+    </form>
+</div>
