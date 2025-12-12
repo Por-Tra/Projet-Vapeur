@@ -1,0 +1,16 @@
+<!-- Liste des jeu pour un genre dédié -->
+<h1>Jeux du genre {{nomGenre}}</h1>
+<div>
+    {{#if listejeu}}
+    <ul>
+    {{#each listejeu}}
+        <li>{{titre}}</li>
+    {{/each}}
+    </ul>
+    {{else}}
+    <p>Aucun jeu pour ce genre pour le moment.</p>
+    {{/if}}
+</div>
+
+<a href="/genres">Retour à la liste des genres</a>
+<a href="/">Retour à l'accueil</a>
