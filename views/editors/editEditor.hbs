@@ -1,0 +1,14 @@
+<h1>Modifier l'éditeur</h1>
+
+<form action="/edit-editor" method="POST">
+    <input type="hidden" name="id" value="{{editeur.idEditeur}}" />
+    
+    <div>
+        <label for="nomEditeur">Nom de l'éditeur :</label>
+        <input type="text" id="nomEditeur" name="nomEditeur" value="{{editeur.nomEditeur}}" required />
+    </div>
+    
+    <button type="submit">Modifier l'éditeur</button>
+</form>
+
+<a href="/editors">Retour à la liste des éditeurs</a>
