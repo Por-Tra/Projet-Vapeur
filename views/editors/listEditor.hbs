@@ -6,7 +6,7 @@
     {{#if editeurs}} {{!-- Verif s'il y a des éditeurs exisatnts --}}
         {{#each editeurs}} {{!-- Afficher si c'est le cas --}}
             <div>
-                <h2>{{nomEditeur}}</h2>
+                <h2><a href="/editors/{{idEditeur}}/games">{{nomEditeur}}</a></h2>
                 
                 <p><strong>Jeux publiés :</strong></p>
 
@@ -14,7 +14,7 @@
                 {{#if jeux}}
                     <ul>
                         {{#each jeux}}
-                            <li>{{jeu.titre}}</li>
+                            <li><a href="/games/{{jeu.idJeu}}">{{jeu.titre}}</a></li>
                         {{/each}}
                     </ul>
 

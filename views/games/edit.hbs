@@ -15,7 +15,7 @@
 
     <div>
         <label for="dateDeSortie">Date de sortie :</label>
-        <input type="date" id="dateDeSortie" name="dateDeSortie" value="{{jeu.dateDeSortie}}" />
+        <input type="date" id="dateDeSortie" name="dateDeSortie" value="{{formattedDateDeSortie}}" />
     </div>
 
     <div>
@@ -23,7 +23,7 @@
         {{#each genres}}
             <div>
                 <input type="checkbox" id="genre-{{idGenre}}" name="genres" value="{{idGenre}}" 
-                    {{#if (lookup ../selectedGenres idGenre)}}checked{{/if}} />
+                    {{#if (includes ../selectedGenres idGenre)}}checked{{/if}} />
                 <label for="genre-{{idGenre}}">{{nomGenre}}</label>
             </div>
         {{/each}}
@@ -34,7 +34,7 @@
         {{#each editeurs}}
             <div>
                 <input type="checkbox" id="editeur-{{idEditeur}}" name="editeurs" value="{{idEditeur}}" 
-                    {{#if (lookup ../selectedEditeurs idEditeur)}}checked{{/if}} />
+                    {{#if (includes ../selectedEditeurs idEditeur)}}checked{{/if}} />
                 <label for="editeur-{{idEditeur}}">{{nomEditeur}}</label>
             </div>
         {{/each}}
