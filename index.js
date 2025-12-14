@@ -9,6 +9,8 @@ const PORT = 3008;
 
 const hbs = require("hbs");
 
+//! index.js est le fichier qui gère les routes.
+
 // Configuration de Handlebars pour Express
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
@@ -25,6 +27,7 @@ hbs.registerHelper("includes", (collection, value) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
+//& Route page d'accueil
 app.get("/", async (req, res) => {
     const jeuxMisEnAvant = await prisma.jeu.findMany
     ({
