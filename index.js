@@ -1,7 +1,12 @@
+/**
+ * Serveur Express pour l'application Vapeur (clone de Steam)
+ * Gère toutes les routes pour les jeux, genres et éditeurs
+ */
+
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const bodyParser = require("body-parser");
-const path = require("path")
+const path = require("path");
 
 const app = express();
 const prisma = new PrismaClient();
@@ -9,37 +14,58 @@ const PORT = 3008;
 
 const hbs = require("hbs");
 
-// Configuration de Handlebars pour Express
-app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
-app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
-hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit le dossier des partials (composants e.g. header, footer, menu...)
+// ===================================================
+// CONFIGURATION DE HANDLEBARS
+// ===================================================
+
+app.set("view engine", "hbs"); // Définir Handlebars comme moteur de template
+app.set("views", path.join(__dirname, "views")); // Définir le dossier des vues
+hbs.registerPartials(path.join(__dirname, "views", "partials")); // Enregistrer les partials (header, footer, etc.)
+
+// Helper Handlebars pour vérifier si une valeur est dans un tableau
 hbs.registerHelper("includes", (collection, value) => {
     if (!Array.isArray(collection)) {
         return false;
     }
-
     const target = Number(value);
     return collection.some((item) => Number(item) === target);
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+// ===================================================
+// MIDDLEWARES
+// ===================================================
 
+app.use(bodyParser.urlencoded({ extended: true })); // Parser les données de formulaire
+app.use(express.static(path.join(__dirname, "public"))); // Servir les fichiers statiques (CSS, images, etc.)
+
+// ===================================================
+// ROUTES - PAGE D'ACCUEIL
+// ===================================================
+
+/**
+ * GET / - Affiche la page d'accueil avec les jeux mis en avant
+ */
 app.get("/", async (req, res) => {
-    const jeuxMisEnAvant = await prisma.jeu.findMany
-    ({
+    const jeuxMisEnAvant = await prisma.jeu.findMany({
         where: { misEnAvant: true }
     });
     res.locals.jeuxMisEnAvant = jeuxMisEnAvant;
-    res.render("index"); // Page d'accueil
+    res.render("index");
 });
 
-// Ajouter un jeu
+// ===================================================
+// ROUTES - GESTION DES JEUX
+// ===================================================
+
+/**
+ * POST /add-game - Créer un nouveau jeu
+ * Associe les genres et éditeurs sélectionnés
+ */
 app.post("/add-game", async (req, res) => {
     const { titre, description, dateDeSortie, genres, editeurs, misEnAvant } = req.body;
     
     try {
-        // Créer le jeu
+        // 1. Créer le jeu
         const jeu = await prisma.jeu.create({
             data: {
                 titre,
@@ -49,53 +75,53 @@ app.post("/add-game", async (req, res) => {
             }
         });
 
-    // Associer les genres (si fournis)
-    if (genres) {
-        const genreIds = Array.isArray(genres) ? genres : [genres];
-        await Promise.all(
-            genreIds.map((idGenre) =>
-                prisma.jeuGenre.create({
-                    data: { idJeu: jeu.idJeu,
-                        idGenre: parseInt(idGenre)}
-            }))
-        );
-    }
+        // 2. Associer les genres sélectionnés
+        if (genres) {
+            const genreIds = Array.isArray(genres) ? genres : [genres];
+            await Promise.all(
+                genreIds.map((idGenre) =>
+                    prisma.jeuGenre.create({
+                        data: { idJeu: jeu.idJeu, idGenre: parseInt(idGenre) }
+                    })
+                )
+            );
+        }
 
-    // Associer les éditeurs (si fournis)
-    if (editeurs) {
-        const editeurIds = Array.isArray(editeurs) ? editeurs : [editeurs];
-        await Promise.all(
-            editeurIds.map((idEditeur) =>
-                prisma.jeuEditeur.create({
-                    data: {
-                        idJeu: jeu.idJeu,
-                        idEditeur: parseInt(idEditeur)}
-                })
-            )
-        );
-    }
+        // 3. Associer les éditeurs sélectionnés
+        if (editeurs) {
+            const editeurIds = Array.isArray(editeurs) ? editeurs : [editeurs];
+            await Promise.all(
+                editeurIds.map((idEditeur) =>
+                    prisma.jeuEditeur.create({
+                        data: { idJeu: jeu.idJeu, idEditeur: parseInt(idEditeur) }
+                    })
+                )
+            );
+        }
 
         res.redirect("/games");
-    } 
-    catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la création du jeu");
     }
 });
 
-// Afficher tous les jeux
+/**
+ * GET /games - Affiche tous les jeux avec leurs genres et éditeurs
+ */
 app.get("/games", async (req, res) => {
     const games = await prisma.jeu.findMany({
-        include: 
-        {
-            genres: {include: {genre: true}},
-            editeurs: {include: {editeur: true}}
+        include: {
+            genres: { include: { genre: true } },
+            editeurs: { include: { editeur: true } }
         }
     });
-    res.render("games/list", { games });
+    res.render("games/listGames", { games });
 });
 
-// Afficher le détail d'un jeu
+/**
+ * GET /games/:id - Affiche le détail d'un jeu spécifique
+ */
 app.get("/games/:id", async (req, res) => {
     const gameId = parseInt(req.params.id, 10);
 
@@ -116,25 +142,30 @@ app.get("/games/:id", async (req, res) => {
             return res.status(404).send("Jeu introuvable");
         }
 
+        // Formater la date pour l'affichage
         const formattedDate = jeu.dateDeSortie
             ? new Date(jeu.dateDeSortie).toLocaleDateString("fr-FR")
             : "";
 
-        res.render("games/show", { jeu, formattedDate });
-    }
-    catch (error) {
+        res.render("games/showGame", { jeu, formattedDate });
+    } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors du chargement du jeu");
     }
 });
 
-// Formulaire pour ajouter un jeu
+/**
+ * GET /add-game - Affiche le formulaire d'ajout d'un jeu
+ */
 app.get("/add-game", async (req, res) => {
     const genres = await prisma.genre.findMany();
     const editeurs = await prisma.editeur.findMany();
-    res.render("games/add", { genres, editeurs });
+    res.render("games/addGame", { genres, editeurs });
 });
 
+/**
+ * GET /delete-game - Supprime un jeu
+ */
 app.get("/delete-game", async (req, res) => {
     const { id } = req.query;
     try {
@@ -142,14 +173,15 @@ app.get("/delete-game", async (req, res) => {
             where: { idJeu: parseInt(id) }
         });
         res.redirect("/games");
-    } 
-    catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la suppression du jeu");
     }
 });
 
-// Formulaire pour modifier un jeu
+/**
+ * GET /edit-game - Affiche le formulaire de modification d'un jeu
+ */
 app.get("/edit-game", async (req, res) => {
     const { id } = req.query;
     try {
@@ -168,14 +200,16 @@ app.get("/edit-game", async (req, res) => {
         const genres = await prisma.genre.findMany();
         const editeurs = await prisma.editeur.findMany();
         
-        // Créer des tableaux d'IDs pour pré-cocher les cases
+        // Récupérer les IDs des genres et éditeurs pour pré-cocher les checkboxes
         const selectedGenres = jeu.genres.map(jg => jg.idGenre);
         const selectedEditeurs = jeu.editeurs.map(je => je.idEditeur);
+        
+        // Formater la date pour l'input de type date
         const formattedDateDeSortie = jeu.dateDeSortie
             ? new Date(jeu.dateDeSortie).toISOString().split("T")[0]
             : "";
         
-        res.render("games/edit", { 
+        res.render("games/editGame", { 
             jeu, 
             genres, 
             editeurs, 
@@ -189,12 +223,14 @@ app.get("/edit-game", async (req, res) => {
     }
 });
 
-// Modifier le jeu
+/**
+ * POST /edit-game - Met à jour un jeu existant
+ */
 app.post("/edit-game", async (req, res) => {
     const { id, titre, description, dateDeSortie, genres, editeurs, misEnAvant } = req.body;
     
     try {
-        // Mettre à jour le jeu
+        // 1. Mettre à jour les informations du jeu
         await prisma.jeu.update({
             where: { idJeu: parseInt(id) },
             data: {
@@ -205,12 +241,12 @@ app.post("/edit-game", async (req, res) => {
             }
         });
 
-        // Supprimer les anciennes associations de genres
+        // 2. Supprimer les anciennes associations de genres
         await prisma.jeuGenre.deleteMany({
             where: { idJeu: parseInt(id) }
         });
 
-        // Créer les nouvelles associations de genres
+        // 3. Créer les nouvelles associations de genres
         if (genres) {
             const genreIds = Array.isArray(genres) ? genres : [genres];
             await Promise.all(
@@ -225,12 +261,12 @@ app.post("/edit-game", async (req, res) => {
             );
         }
 
-        // Supprimer les anciennes associations d'éditeurs
+        // 4. Supprimer les anciennes associations d'éditeurs
         await prisma.jeuEditeur.deleteMany({
             where: { idJeu: parseInt(id) }
         });
 
-        // Créer les nouvelles associations d'éditeurs
+        // 5. Créer les nouvelles associations d'éditeurs
         if (editeurs) {
             const editeurIds = Array.isArray(editeurs) ? editeurs : [editeurs];
             await Promise.all(
@@ -246,19 +282,26 @@ app.post("/edit-game", async (req, res) => {
         }
 
         res.redirect("/games");
-    } 
-    catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la modification du jeu");
     }
 });
 
-// Formulaire pour ajouter un éditeur
+// ===================================================
+// ROUTES - GESTION DES ÉDITEURS
+// ===================================================
+
+/**
+ * GET /add-editor - Affiche le formulaire d'ajout d'un éditeur
+ */
 app.get("/add-editor", (req, res) => {
     res.render("editors/addEditor");
 });
 
-// Ajouter un éditeur
+/**
+ * POST /add-editor - Créer un nouvel éditeur
+ */
 app.post("/add-editor", async (req, res) => {
     const { nomEditeur } = req.body;
     
@@ -267,25 +310,161 @@ app.post("/add-editor", async (req, res) => {
             data: { nomEditeur }
         });
         res.redirect("/editors");
-    } 
-    catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la création de l'éditeur");
     }
 });
 
-// Afficher tous les éditeurs et les jeux auquels ils sotn associé
+/**
+ * GET /editors - Affiche tous les éditeurs avec leurs jeux
+ */
 app.get("/editors", async (req, res) => {
     const editeurs = await prisma.editeur.findMany({
-        include: 
-        {
-            jeux: {include: {jeu: true}}
+        include: {
+            jeux: { include: { jeu: true } }
         }
     });
     res.render("editors/listEditor", { editeurs });
 });
 
-// Afficher les jeux associés à un genre
+/**
+ * GET /editors/:id/games - Affiche tous les jeux d'un éditeur
+ */
+app.get("/editors/:id/games", async (req, res) => {
+    const editorId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(editorId)) {
+        return res.status(400).send("Identifiant d'éditeur invalide");
+    }
+
+    try {
+        const editeur = await prisma.editeur.findUnique({
+            where: { idEditeur: editorId },
+            include: {
+                jeux: {
+                    include: {
+                        jeu: {
+                            include: {
+                                genres: { include: { genre: true } }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!editeur) {
+            return res.status(404).send("Éditeur introuvable");
+        }
+
+        // Extraire les jeux de la relation
+        const jeux = editeur.jeux.map((jeuEditeur) => jeuEditeur.jeu);
+        res.render("editors/editorGames", { editeur, jeux });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors du chargement des jeux de l'éditeur");
+    }
+});
+
+/**
+ * GET /delete-editor - Supprime un éditeur
+ */
+app.get("/delete-editor", async (req, res) => {
+    const { id } = req.query;
+    try {
+        await prisma.editeur.delete({
+            where: { idEditeur: parseInt(id) }
+        });
+        res.redirect("/editors");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la suppression de l'éditeur");
+    }
+});
+
+/**
+ * GET /edit-editor - Affiche le formulaire de modification d'un éditeur
+ */
+app.get("/edit-editor", async (req, res) => {
+    const { id } = req.query;
+    try {
+        const editeur = await prisma.editeur.findUnique({
+            where: { idEditeur: parseInt(id) },
+            include: {
+                jeux: { include: { jeu: true } }
+            }
+        });
+        
+        if (!editeur) {
+            return res.status(404).send("Éditeur non trouvé");
+        }
+        
+        res.render("editors/editEditor", { editeur });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors du chargement de l'éditeur");
+    }
+});
+
+/**
+ * POST /edit-editor - Met à jour un éditeur existant
+ */
+app.post("/edit-editor", async (req, res) => {
+    const { id, nomEditeur } = req.body;
+    
+    try {
+        await prisma.editeur.update({
+            where: { idEditeur: parseInt(id) },
+            data: { nomEditeur }
+        });
+        
+        res.redirect("/editors");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la modification de l'éditeur");
+    }
+});
+
+// ===================================================
+// ROUTES - GESTION DES GENRES
+// ===================================================
+
+/**
+ * GET /genres - Affiche tous les genres
+ */
+app.get("/genres", async (req, res) => {
+    const listegenre = await prisma.genre.findMany();
+    res.render("genres/list_genre", { listegenre });
+});
+
+/**
+ * GET /genres/:id/jeux - Affiche tous les jeux d'un genre (ancienne route)
+ */
+app.get("/genres/:id/jeux", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const genreAvecJeux = await prisma.genre.findUnique({
+            where: { idGenre: parseInt(id) },
+            include: {
+                jeux: {
+                    include: { jeu: true }
+                }
+            }
+        });
+        
+        const nomGenre = genreAvecJeux ? genreAvecJeux.nomGenre : "";
+        const listejeu = genreAvecJeux && genreAvecJeux.jeux ? genreAvecJeux.jeux.map(gj => gj.jeu) : [];
+        res.render("genres/list-genre-jeu", { nomGenre, listejeu });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des jeux pour ce genre");
+    }
+});
+
+/**
+ * GET /genres/:id/games - Affiche tous les jeux d'un genre (nouvelle route)
+ */
 app.get("/genres/:id/games", async (req, res) => {
     const genreId = parseInt(req.params.id, 10);
 
@@ -314,140 +493,23 @@ app.get("/genres/:id/games", async (req, res) => {
             return res.status(404).send("Genre introuvable");
         }
 
+        // Extraire les jeux de la relation
         const jeux = genre.jeux.map((jeuGenre) => jeuGenre.jeu);
         res.render("genres/genreGames", { genre, jeux });
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors du chargement des jeux du genre");
     }
 });
 
-// Afficher les jeux publiés par un éditeur donné
-app.get("/editors/:id/games", async (req, res) => {
-    const editorId = parseInt(req.params.id, 10);
+// ===================================================
+// INITIALISATION - SEED DES GENRES PAR DÉFAUT
+// ===================================================
 
-    if (Number.isNaN(editorId)) {
-        return res.status(400).send("Identifiant d'éditeur invalide");
-    }
-
-    try {
-        const editeur = await prisma.editeur.findUnique({
-            where: { idEditeur: editorId },
-            include: {
-                jeux: {
-                    include: {
-                        jeu: {
-                            include: {
-                                genres: { include: { genre: true } }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        if (!editeur) {
-            return res.status(404).send("Éditeur introuvable");
-        }
-
-        const jeux = editeur.jeux.map((jeuEditeur) => jeuEditeur.jeu);
-        res.render("editors/editorGames", { editeur, jeux });
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors du chargement des jeux de l'éditeur");
-    }
-});
-
-// Supprimer un éditeur
-app.get("/delete-editor", async (req, res) => {
-    const { id } = req.query;
-    try {
-        await prisma.editeur.delete({
-            where: { idEditeur: parseInt(id) }
-        });
-        res.redirect("/editors");
-    } 
-    catch (error) 
-    {
-        console.error(error);
-        res.status(500).send("Erreur lors de la suppression de l'éditeur");
-    }
-});
-
-// Formulaire pour modifier un éditeur
-app.get("/edit-editor", async (req, res) => {
-    const { id } = req.query;
-    try {
-        const editeur = await prisma.editeur.findUnique({
-            where: { idEditeur: parseInt(id) },
-            include: {
-                jeux: { include: { jeu: true } }
-            }
-        });
-        
-        if (!editeur) {
-            return res.status(404).send("Éditeur non trouvé");
-        }
-        
-        res.render("editors/editEditor", { editeur });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors du chargement de l'éditeur");
-    }
-});
-
-// Modifier un éditeur
-app.post("/edit-editor", async (req, res) => {
-    const { id, nomEditeur } = req.body;
-    
-    try {
-        await prisma.editeur.update({
-            where: { idEditeur: parseInt(id) },
-            data: { nomEditeur }
-        });
-        
-        res.redirect("/editors");
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la modification de l'éditeur");
-    }
-});
-
-
-
-// Afficher tous les genres
-app.get("/genres", async (req, res) => {
-    const listegenre = await prisma.genre.findMany();
-    res.render("genres/list_genre", { listegenre });
-});
-
-// Afficher tous les jeux d'un genre spécifique
-app.get("/genres/:id/jeux", async (req, res) => {
-    const { id } = req.params;
-    try {
-        const genreAvecJeux = await prisma.genre.findUnique({
-            where: { idGenre: parseInt(id) },
-            include: {
-                jeux: {
-                    include: { jeu: true }
-                }
-            }
-        });
-        // Préparer les données pour le template `list-genre-jeu.hbs`
-        const nomGenre = genreAvecJeux ? genreAvecJeux.nomGenre : "";
-        const listejeu = genreAvecJeux && genreAvecJeux.jeux ? genreAvecJeux.jeux.map(gj => gj.jeu) : [];
-        res.render("genres/list-genre-jeu", { nomGenre, listejeu });
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des jeux pour ce genre");
-    }
-});
-
-
-// Seed des genres par défaut si nécessaire
+/**
+ * Fonction pour initialiser les genres par défaut dans la base de données
+ * Utilise upsert pour éviter les doublons
+ */
 async function seedGenres() {
     const defaultGenres = [
         "Action",
@@ -460,15 +522,35 @@ async function seedGenres() {
     for (const nomGenre of defaultGenres) {
         await prisma.genre.upsert({
             where: { nomGenre },
-            update: {},
-            create: { nomGenre }
+            update: {}, // Ne rien faire si le genre existe déjà
+            create: { nomGenre } // Créer le genre s'il n'existe pas
         });
     }
 }
 
+// ===================================================
+// GESTION DES ERREURS
+// ===================================================
+
+/**
+ * Middleware 404 - Capture toutes les routes non définies
+ */
+app.use((req, res) => {
+    res.status(404).render("errors/404", {
+        url: req.originalUrl
+    });
+});
+
+// ===================================================
+// DÉMARRAGE DU SERVEUR
+// ===================================================
+
+/**
+ * Fonction asynchrone pour initialiser la base de données et démarrer le serveur
+ */
 (async () => {
     try {
-        await seedGenres();
+        await seedGenres(); // Initialiser les genres par défaut
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
@@ -477,3 +559,5 @@ async function seedGenres() {
         process.exit(1);
     }
 })();
+
+
