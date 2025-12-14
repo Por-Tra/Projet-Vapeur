@@ -2,13 +2,16 @@
 
 
 ### Instructions d'installation et de lancement
-```git clone``` - Cloner le projet  
-```npm install``` - Installer les paquets  
-```npx prisma generate deploy``` - Générer la base de données    
-```npm run start``` - Lancer le projet  
+```bash
+git clone <repo-url>      # Cloner le projet  
+npm install               # Installer les paquets  
+npx prisma generate       # Générer le client Prisma
+npx prisma migrate dev    # Créer et appliquer les migrations    
+npm run start             # Lancer le projet  
+```
 
 ### Ou installer avec l'exécutable
-``` start.sh```
+```start.sh```
 
 ### Besoins pour lancer le projet
 - Node.js
@@ -25,4 +28,4 @@
 [Clément BOUNAIX](https://github.com/loazur)  
 [Lucas CONTRERAS-HODAPP](https://github.com/Por-Tra)   
 [Nathanaël MORIT](https://github.com/Mortann)  
-[Lucas CHAPON](https://github.com/LucasChap-git)  
+[Lucas CHAPON](https://github.com/LucasChap-git)
