@@ -1,16 +1,24 @@
-<!-- Liste des jeu pour un genre dédié -->
-<h1>Jeux du genre {{nomGenre}}</h1>
-<div>
-    {{#if listejeu}}
-    <ul>
-    {{#each listejeu}}
-        <li><a href="/games/{{idJeu}}">{{titre}}</a></li>
-    {{/each}}
-    </ul>
-    {{else}}
-    <p>Aucun jeu pour ce genre pour le moment.</p>
-    {{/if}}
+<div class="page-title">
+    <h1>Jeux du genre <span class="text-accent">{{nomGenre}}</span></h1>
 </div>
 
-<a href="/genres">Retour à la liste des genres</a>
-<a href="/">Retour à l'accueil</a>
+{{#if listejeu}}
+<ul class="list-simple">
+    {{#each listejeu}}
+        <li>
+            <a href="/games/{{idJeu}}">{{titre}}</a>
+        </li>
+    {{/each}}
+</ul>
+{{else}}
+<div class="card">
+    <div class="card-body text-center">
+        <p class="text-muted">Aucun jeu pour ce genre pour le moment.</p>
+    </div>
+</div>
+{{/if}}
+
+<div class="mt-3 flex gap-2">
+    <a href="/genres" class="btn btn-ghost">← Genres</a>
+    <a href="/" class="btn btn-ghost">Accueil</a>
+</div>

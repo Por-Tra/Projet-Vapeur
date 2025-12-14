@@ -1,10 +1,42 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="#" />
+        <title>Vapeur - Store</title>
+        <link rel="stylesheet" href="/styles.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     </head>
     <body>
-        {{{ body }}}
+        <!-- Header -->
+        <header class="site-header">
+            <div class="header-top">
+                <a href="/" class="logo">
+                    <span class="logo-icon"><i class="fas fa-gamepad"></i></span>
+                    <span>Vapeur</span>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="/games">Jeux</a></li>
+                    <li><a href="/genres">Genres</a></li>
+                    <li><a href="/editors">Éditeurs</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-container">
+            {{{ body }}}
+        </main>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <p>&copy; 2025 Vapeur. Projet universitaire - Tous droits réservés.</p>
+        </footer>
     </body>
 </html>

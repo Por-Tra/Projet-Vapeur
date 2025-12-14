@@ -23,6 +23,7 @@ hbs.registerHelper("includes", (collection, value) => {
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", async (req, res) => {
     const jeuxMisEnAvant = await prisma.jeu.findMany
