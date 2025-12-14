@@ -18,7 +18,7 @@ npm run start             # Lancer le projet
 - NPM
 - Prisma
 - SQLite
-- un fichier .env avec les variables d'environnement nécessaires
+- **un fichier .env avec les variables d'environnement nécessaires**
 
 ## Aperçu
 ![Aperçu 1](readmeAsset/1.png)
