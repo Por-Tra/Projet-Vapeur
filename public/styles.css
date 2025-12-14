@@ -358,6 +358,7 @@ strong {
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -820,3 +821,80 @@ tbody tr:hover {
 .cards-grid .card:nth-child(4) { animation-delay: 0.15s; }
 .cards-grid .card:nth-child(5) { animation-delay: 0.2s; }
 .cards-grid .card:nth-child(6) { animation-delay: 0.25s; }
+
+/* ---------- Error Pages ---------- */
+.error-container {
+  max-width: 700px;
+  margin: 4rem auto;
+  padding: 3rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 5rem;
+  color: var(--accent-blue);
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.error-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-white);
+}
+
+.error-message {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.error-details {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.error-details code {
+  color: var(--accent-blue);
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .error-container {
+    margin: 2rem auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .error-icon {
+    font-size: 3.5rem;
+  }
+
+  .error-title {
+    font-size: 1.5rem;
+  }
+
+  .error-actions {
+    flex-direction: column;
+  }
+
+  .error-actions .btn {
+    width: 100%;
+  }
+}

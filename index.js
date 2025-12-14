@@ -469,6 +469,13 @@ async function seedGenres() {
     }
 }
 
+// Gestion de l'erreur 404
+app.use((req, res) => {
+    res.status(404).render("errors/404", {
+        url: req.originalUrl
+    });
+});
+
 (async () => {
     try {
         await seedGenres();
@@ -480,3 +487,5 @@ async function seedGenres() {
         process.exit(1);
     }
 })();
+
+
