@@ -515,8 +515,10 @@ async function seedGenres() {
         "Action",
         "Aventure",
         "RPG",
-        "Stratégie",
-        "Simulation"
+        "Simulation",
+        "Sport",
+        "MMORPG"
+        
     ];
 
     for (const nomGenre of defaultGenres) {
