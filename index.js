@@ -438,29 +438,6 @@ app.get("/genres", async (req, res) => {
     res.render("genres/list_genre", { listegenre });
 });
 
-/**
- * GET /genres/:id/jeux - Affiche tous les jeux d'un genre (ancienne route)
- */
-app.get("/genres/:id/jeux", async (req, res) => {
-    const { id } = req.params;
-    try {
-        const genreAvecJeux = await prisma.genre.findUnique({
-            where: { idGenre: parseInt(id) },
-            include: {
-                jeux: {
-                    include: { jeu: true }
-                }
-            }
-        });
-        
-        const nomGenre = genreAvecJeux ? genreAvecJeux.nomGenre : "";
-        const listejeu = genreAvecJeux && genreAvecJeux.jeux ? genreAvecJeux.jeux.map(gj => gj.jeu) : [];
-        res.render("genres/list-genre-jeu", { nomGenre, listejeu });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des jeux pour ce genre");
-    }
-});
 
 /**
  * GET /genres/:id/games - Affiche tous les jeux d'un genre (nouvelle route)
